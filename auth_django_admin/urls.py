@@ -19,7 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     #请求分发
-    # path('user/', include('user.urls')),
-    # path('role',include('role.urls')),
-    # path('menu',include('menu.urls')),
+    path('user/', include('user.urls')),
+    path('menu/',include('menu.urls')),
 ]

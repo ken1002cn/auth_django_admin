@@ -21,4 +21,5 @@ urlpatterns = [
     #请求分发
     path('user/', include('user.urls')),
     path('menu/',include('menu.urls')),
+    path('ai/',include('ai.urls')),
 ]

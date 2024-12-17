@@ -11,18 +11,26 @@ from menu.models import TravelItem, TravelItemDetail, TravelItemDetailRelImage, 
 # Create your views here.
 class TravelItemPageView(View):
     def get(self, request):
-        page = int(request.GET.get('page',1))
-        page_size = int(request.GET.get('page_size',12))
-        travel_item = TravelItem.objects.all()
-        paginator = Paginator(travel_item,page_size) #分页处理
+        page = int(request.GET.get('page', 1))
+        page_size = int(request.GET.get('page_size', 12))
+        search_query = request.GET.get('search', '')  # 获取搜索条件
+        # 如果有搜索条件，进行模糊匹配
+        if search_query:
+            travel_item = TravelItem.objects.filter(title__icontains=search_query)
+        else:
+            travel_item = TravelItem.objects.all()
+        # 分页处理
+        paginator = Paginator(travel_item, page_size)
         try:
-            page_obj = paginator.get_page(page) #获取分页器实例
+            page_obj = paginator.get_page(page)  # 获取分页器实例
         except Exception:
-            return JsonResponse({'code':200,'total':paginator.count,'data':[]})
+            return JsonResponse({'code': 200, 'total': paginator.count, 'data': []})
+
+        # 返回分页数据
         return JsonResponse({
             'code': 200,
             'total': paginator.count,
-            'data':list(page_obj.object_list.values('id','title','image_url','status'))
+            'data': list(page_obj.object_list.values('id', 'title', 'image_url', 'status'))
         })
 
 class TravelItemPageDetailView(View):
